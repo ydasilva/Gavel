@@ -8,45 +8,77 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.psyphertxt.gavel_project.SignUp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="false">
 
     <ImageView
-        android:layout_width="400dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_gavel" />
+        android:src="@drawable/ic_gavel"
+        android:layout_marginTop="70dp" />
 
-    <EditText
+    <!--<EditText-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="phone"-->
+        <!--android:ems="10"-->
+        <!--android:id="@+id/editText"-->
+        <!--android:hint="Phone Number"-->
+        <!--android:layout_below="@+id/textView"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="25dp" />-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+        <!--android:text="Create Your Profile"-->
+        <!--android:id="@+id/textView"-->
+        <!--android:layout_below="@+id/imageView"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="25dp" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/btnNext_CreateProfile"-->
+        <!--android:layout_width="@dimen/button_width"-->
+        <!--android:layout_height="@dimen/button_height"-->
+        <!--android:text="Next"-->
+        <!--android:background="@drawable/primary_button_selector"-->
+        <!--android:layout_below="@+id/editText"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="25dp"-->
+        <!--android:textColor="@color/colorAccent"/>-->
+
+    <!--<com.digits.sdk.android.DigitsAuthButton-->
+        <!--android:id="@+id/auth_button"-->
+        <!--android:background="@drawable/primary_button_selector"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/btnNext_CreateProfile"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="25dp" />-->
+
+    <io.fabric.samples.cannonball.view.CannonballDigitsAuthButton
+        android:id="@+id/phone_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:hint="Phone Number"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Create Your Profile"
-        android:id="@+id/textView"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/btnNext_CreateProfile"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
-        android:text="Next"
-        android:background="@drawable/primary_button_selector"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:textColor="@color/colorAccent"/>
+        android:background="@drawable/digits_button"
+        android:layout_marginTop="@dimen/login_button_margin_top"
+        android:layout_marginBottom="@dimen/login_button_margin_bottom"
+        android:layout_marginLeft="@dimen/login_button_margin_start"
+        android:layout_marginStart="@dimen/login_button_margin_start"
+        android:layout_marginRight="@dimen/login_button_margin_end"
+        android:layout_marginEnd="@dimen/login_button_margin_end"
+        android:text="Get Started"
+        android:layout_below="@id/imageView"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/login_button_text_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

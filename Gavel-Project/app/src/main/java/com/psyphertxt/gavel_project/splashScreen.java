@@ -4,8 +4,18 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.os.Handler;
+import com.crashlytics.android.Crashlytics;
+import com.digits.sdk.android.Digits;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import io.fabric.sdk.android.Fabric;
 
 public class splashScreen extends Activity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "Gdsq8mE638DbzxH71OnMqhDvH";
+    private static final String TWITTER_SECRET = "N3G4GE9DnucI8xchwUgzAHzErohAuy8KSwk1pCp4wMo78L9X6W";
+
 
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 1000;
@@ -16,6 +26,8 @@ public class splashScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new TwitterCore(authConfig), new Digits(), new Crashlytics());
         setContentView(R.layout.activity_splash_screen);
 
         /* New Handler to start the Menu-Activity

@@ -11,8 +11,8 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="400dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -36,7 +36,8 @@
         android:text="Enter The Verification Code"
         android:id="@+id/textView"
         android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 
     <Button
         android:id="@+id/btnNext_Verification"

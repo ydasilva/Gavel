@@ -11,17 +11,18 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="400dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_gavel" />
 <!--TODO: Transform all text here to string values-->
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/fname"
         android:hint="First Name"
@@ -32,7 +33,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/lname"
         android:hint="Last Name"
@@ -43,7 +44,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="phone"
+        android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/email"
         android:hint="Email"
@@ -58,7 +59,8 @@
         android:text="Basic Profile Information"
         android:id="@+id/textView"
         android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 
     <Button
         android:id="@+id/btnDone_BasicInfo"
@@ -81,5 +83,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:textColor="@color/colorPrimaryDark"/>
+
 
 </RelativeLayout>
