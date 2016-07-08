@@ -27,13 +27,7 @@
         <activity android:name=".activity.SignUp"></activity>
         <activity android:name=".activity.VerificationCode"></activity>
         <activity android:name=".activity.BasicInfo"></activity>
-        <activity android:name=".activity.splashScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.splashScreen"></activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"

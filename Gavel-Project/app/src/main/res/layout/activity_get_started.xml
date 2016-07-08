@@ -9,4 +9,32 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.psyphertxt.gavel.activity.GetStarted">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/splash"
+        android:layout_marginTop="50dp" />
+
+    <com.psyphertxt.gavel.view.GavelDigitsAuthButton
+        android:id="@+id/phone_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/digits_button"
+        android:layout_marginTop="@dimen/login_button_margin_top"
+        android:layout_marginBottom="@dimen/login_button_margin_bottom"
+        android:layout_marginLeft="@dimen/login_button_margin_start"
+        android:layout_marginStart="@dimen/login_button_margin_start"
+        android:layout_marginRight="@dimen/login_button_margin_end"
+        android:layout_marginEnd="@dimen/login_button_margin_end"
+        android:text="Get Started"
+        android:layout_below="@id/imageView"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/login_button_text_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

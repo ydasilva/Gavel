@@ -1,8 +1,11 @@
 package com.psyphertxt.gavel.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.digits.sdk.android.AuthCallback;
@@ -11,17 +14,25 @@ import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 import com.psyphertxt.gavel.R;
 
-public class GetStarted extends AppCompatActivity {
+public class SignUp extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_started);
+        setContentView(R.layout.activity_sign_up);
+
+//        Button next = (Button) findViewById(R.id.btnNext_CreateProfile);
+//
+//        next.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent verification = new Intent(SignUp.this, VerificationCode.class);
+//                SignUp.this.startActivity(verification);
+//            }
+//        });
 
         DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.phone_button);
 //        digitsButton.setAuthTheme(R.style.GavelTheme);
-
-        assert digitsButton != null;
         digitsButton.setCallback(new AuthCallback() {
             @Override
             public void success(DigitsSession session, String phoneNumber) {
@@ -33,7 +44,6 @@ public class GetStarted extends AppCompatActivity {
             @Override
             public void failure(DigitsException exception) {
                 Log.d("Digits", "Sign in with Digits failure", exception);
-                Toast.makeText(getApplicationContext(), "Authentication FAILED ", Toast.LENGTH_LONG).show();
             }
         });
 
