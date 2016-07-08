@@ -7,17 +7,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.psyphertxt.gavel_project.SignUp"
+    tools:context="com.psyphertxt.gavel.activity.SignUp"
     android:orientation="vertical"
     android:clickable="false">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="160dp"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_gavel"
+        android:src="@drawable/splash"
         android:layout_marginTop="70dp" />
 
     <!--<EditText-->

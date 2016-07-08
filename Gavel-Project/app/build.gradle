@@ -20,7 +20,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.psyphertxt.gavel_project"
+        applicationId "com.psyphertxt.gavel"
         minSdkVersion 14 //changed from 10 to 14 because of some themes requirements
         targetSdkVersion 23
         versionCode 1
