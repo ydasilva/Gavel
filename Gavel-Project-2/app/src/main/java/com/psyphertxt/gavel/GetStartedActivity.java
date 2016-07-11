@@ -34,7 +34,8 @@ public class GetStartedActivity extends Activity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private ProgressDialog mProgressDialog;
+    private String userPhoneNumber;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,19 @@ public class GetStartedActivity extends Activity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    userID = user.getUid();
+
                     // TODO: Link this to the "Feed" page
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "Feed Page launches!!!",
+                            Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent(GetStartedActivity.this,ProfileNameActivity.class);
+                    intent.putExtra("userID", userID);
+                    startActivity(intent);
+
+                    finish();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -69,12 +82,13 @@ public class GetStartedActivity extends Activity {
             digitsButton.setCallback(new AuthCallback() {
                 @Override
                 public void success(DigitsSession session, String phoneNumber) {
+                    userPhoneNumber = phoneNumber;
                     // TODO: associate the session userID with your user model
                     Toast.makeText(getApplicationContext(), "Authentication successful for "
                             + phoneNumber, Toast.LENGTH_LONG).show();
 
                     // Think about the possibility of signing in the user before creating an account
-                    createAccount(buildEmail(phoneNumber),buildPassword(phoneNumber));
+                    signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
 
                 }
 
@@ -102,11 +116,9 @@ public class GetStartedActivity extends Activity {
     }
 
     private void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
+        Log.d(TAG, "createAccount: " + email);
 
         Toast.makeText(getApplicationContext(), "Creating a new User Account", Toast.LENGTH_LONG).show();
-
-        mProgressDialog.show();
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -122,26 +134,25 @@ public class GetStartedActivity extends Activity {
                             Toast.makeText(GetStartedActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
-                            finish();
+//                            startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
+//                            finish();
+                            Log.d(TAG, "createUserWithEmail:onComplete:Authentication Succeeded");
                         }
 
-                        // [START_EXCLUDE]
-                        mProgressDialog.hide();
-                        // [END_EXCLUDE]
                     }
                 });
         // [END create_user_with_email]
     }
 
-    private void signIn(String email, String password) {
+    private void signIn(String email, final String password) {
         Log.d(TAG, "signIn:" + email);
 
-        mProgressDialog.show();
+        Toast.makeText(getApplicationContext(), "Signing In", Toast.LENGTH_LONG).show();
 
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
@@ -150,14 +161,18 @@ public class GetStartedActivity extends Activity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            //Task is not successful - sign in failed
                             Log.w(TAG, "signInWithEmail", task.getException());
                             Toast.makeText(GetStartedActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                        }
 
-                        // [START_EXCLUDE]
-                        mProgressDialog.hide();
-                        // [END_EXCLUDE]
+                            //Create the account
+                            createAccount(buildEmail(userPhoneNumber),buildPassword(userPhoneNumber));
+                        } else {
+//                            startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
+//                            finish();
+                            Log.d(TAG, "signInWithEmail:onComplete:Authentication Succeeded");
+                        }
                     }
                 });
         // [END sign_in_with_email]
