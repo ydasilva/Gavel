@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1022652383407",
+    "firebase_url": "https://gavel-9c6a4.firebaseio.com",
+    "project_id": "gavel-9c6a4",
+    "storage_bucket": "gavel-9c6a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022652383407:android:685e67427b522a16",
+        "android_client_info": {
+          "package_name": "com.psyphertxt.gavel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022652383407-n3o51f92usg0e18jjfl2cc8qlgt65u8p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.psyphertxt.gavel",
+            "certificate_hash": "80100CEEFFC570D2AA8BA4753B7330933193DF22"
+          }
+        },
+        {
+          "client_id": "1022652383407-9c0g6n7hactprlhicnidms1q7v9fnvsq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU9_2c5ZkZAv1WM61Ng2ckaM6CCTslZy0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022652383407-9c0g6n7hactprlhicnidms1q7v9fnvsq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
