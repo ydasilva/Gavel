@@ -29,7 +29,8 @@
         <activity
             android:name=".MainFeedActivity"
             android:label="@string/title_activity_main_feed"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
 
         <!--LAUNCHER_ACTIVITY-->
         <activity android:name=".LaunchActivity"
