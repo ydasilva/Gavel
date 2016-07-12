@@ -144,7 +144,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // New child entries
-        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        /*mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage,
                 MessageViewHolder>(
                 FriendlyMessage.class,
@@ -191,6 +191,7 @@ public class MainFeedActivity extends AppCompatActivity {
 
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+        //end*/
     }
 
 }
