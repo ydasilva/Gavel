@@ -19,6 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class ProfileNameActivity extends Activity {
+    private Settings mSettings;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @InjectView(R.id.textView) protected TextView mNameLabel;
@@ -32,12 +34,20 @@ public class ProfileNameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_name);
+
+        mSettings = new Settings(this);
+
         ButterKnife.inject(this);
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle.getString("userID") != null && bundle.getString("userPhoneNumber") != null) {
-            userID = bundle.getString("userID");
-            userNumber = bundle.getString("userPhoneNumber");
+//        Bundle bundle = getIntent().getExtras();
+//        if(bundle.getString("userID") != null && bundle.getString("userPhoneNumber") != null) {
+//            userID = bundle.getString("userID");
+//            userNumber = bundle.getString("userPhoneNumber");
+//        }
+        if (!mSettings.getUserId().isEmpty()){
+            // Success
+            userID = mSettings.getUserId();
+
         }
 
         mNameButton.setOnClickListener(new View.OnClickListener() {

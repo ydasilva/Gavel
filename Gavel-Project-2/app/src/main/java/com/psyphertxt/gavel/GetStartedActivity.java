@@ -24,6 +24,8 @@ import io.fabric.sdk.android.Fabric;
 
 public class GetStartedActivity extends Activity {
 
+    private Settings mSettings;
+
     private static final String TAG = "GetStartedActivity";
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -40,9 +42,12 @@ public class GetStartedActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_get_started);
+
+        mSettings = new Settings(this);
+
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig), new Digits());
-        setContentView(R.layout.activity_get_started);
 
         // Get the shared instance of the FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
@@ -63,8 +68,9 @@ public class GetStartedActivity extends Activity {
                             Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(GetStartedActivity.this,ProfileNameActivity.class);
-                    intent.putExtra("userID", userID);
-                    intent.putExtra("phoneNumber", userPhoneNumber);
+
+                    mSettings.setUserId(userID);
+
                     startActivity(intent);
 
                     finish();
@@ -84,6 +90,8 @@ public class GetStartedActivity extends Activity {
                 @Override
                 public void success(DigitsSession session, String phoneNumber) {
                     userPhoneNumber = phoneNumber;
+                    mSettings.setUserNumber(phoneNumber);
+
                     // TODO: associate the session userID with your user model
                     Toast.makeText(getApplicationContext(), "Authentication successful for "
                             + phoneNumber, Toast.LENGTH_LONG).show();

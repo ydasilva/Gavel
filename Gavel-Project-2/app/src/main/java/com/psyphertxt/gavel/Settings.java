@@ -17,6 +17,28 @@ public class Settings {
     }
 
     public String getUserId (){
-        return mSharedPreferences.getString("userId","");
+        return mSharedPreferences.getString(Config.USER_ID,Config.EMPTY_STRING);
     }
+
+    public void setUserId(String userId){
+        mSharedPreferences.edit().putString(Config.USER_ID,userId).apply();
+    }
+
+    public String getUserNumber (){
+        return mSharedPreferences.getString(Config.USER_NUMBER,Config.EMPTY_STRING);
+    }
+
+    public void setUserNumber(String userNumber){
+        mSharedPreferences.edit().putString(Config.USER_NUMBER,userNumber).apply();
+    }
+
+    public String getUserName (){
+        return mSharedPreferences.getString(Config.USER_NAME,Config.EMPTY_STRING);
+    }
+
+    public void setUserName(String userName){
+        mSharedPreferences.edit().putString(Config.USER_NAME,userName).apply();
+    }
+
+
 }
