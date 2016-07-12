@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Gavel</string>
+    <string name="title_activity_main_feed">Feed</string>
 </resources>

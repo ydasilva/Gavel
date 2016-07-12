@@ -26,6 +26,7 @@ public class ProfileNameActivity extends Activity {
     @InjectView(R.id.btnDone_BasicInfo) protected Button mNameButton;
 
     String userID ;
+    String userNumber ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,9 @@ public class ProfileNameActivity extends Activity {
         ButterKnife.inject(this);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle.getString("userID")!= null)
-        {
+        if(bundle.getString("userID") != null && bundle.getString("userPhoneNumber") != null) {
             userID = bundle.getString("userID");
+            userNumber = bundle.getString("userPhoneNumber");
         }
 
         mNameButton.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +61,10 @@ public class ProfileNameActivity extends Activity {
                     Map<String,Object> value = new HashMap<>();
                     value.put("displayName",mNameText.getText().toString());
 
-                    Map<String,Object> valueId = new HashMap<>();
-                    valueId.put("userID",userID);
+                    value.put("phoneNumber",userNumber);
 
                     myRef.setValue(value);
-                    myRef.setValue(valueId);
+//                    myRef.setValue(valueId);
 
                     Toast.makeText(
                             getApplicationContext(),

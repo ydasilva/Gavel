@@ -53,7 +53,7 @@ public class GetStartedActivity extends Activity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
                     userID = user.getUid();
 
                     // TODO: Link this to the "Feed" page
@@ -64,6 +64,7 @@ public class GetStartedActivity extends Activity {
 
                     Intent intent = new Intent(GetStartedActivity.this,ProfileNameActivity.class);
                     intent.putExtra("userID", userID);
+                    intent.putExtra("phoneNumber", userPhoneNumber);
                     startActivity(intent);
 
                     finish();
