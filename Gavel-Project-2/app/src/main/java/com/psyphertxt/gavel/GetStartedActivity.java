@@ -83,7 +83,6 @@ public class GetStartedActivity extends Activity {
         };
 
         DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.phone_button);
-//        digitsButton.setAuthTheme(R.style.GavelTheme);
 
         if(digitsButton != null){
             digitsButton.setCallback(new AuthCallback() {
@@ -97,6 +96,7 @@ public class GetStartedActivity extends Activity {
                             + phoneNumber, Toast.LENGTH_LONG).show();
 
                     // Think about the possibility of signing in the user before creating an account
+
                     signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
 
                 }
