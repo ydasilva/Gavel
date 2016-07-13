@@ -14,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -41,9 +44,15 @@ public class MainFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "MainFeedActivity";
 
+    public static final String MESSAGES_CHILD = "messages";
+
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    private ProgressBar mProgressBar;
 
+    // Firebase instance variables
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseRecyclerAdapter<FeedItem, MessageViewHolder> mFirebaseAdapter;
     private FirebaseAnalytics mFirebaseAnalytics;
 
 //TODO: change the colors of the fab buttons
@@ -136,7 +145,7 @@ public class MainFeedActivity extends AppCompatActivity {
         });
 
         // Initialize ProgressBar and RecyclerView and FirebaseAnalytics
-//        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false); //start from the top
@@ -144,28 +153,37 @@ public class MainFeedActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // New child entries
-        /*mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage,
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<FeedItem,
                 MessageViewHolder>(
-                FriendlyMessage.class,
-                R.layout.item_message,
+                FeedItem.class,
+                R.layout.feed_item,
                 MessageViewHolder.class,
                 mFirebaseDatabaseReference.child(MESSAGES_CHILD)) {
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
-                                              FriendlyMessage friendlyMessage, int position) {
+                                              FeedItem feedItem, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                viewHolder.messageTextView.setText(friendlyMessage.getText());
-                viewHolder.messengerTextView.setText(friendlyMessage.getName());
-                if (friendlyMessage.getPhotoUrl() == null) {
+                viewHolder.messageTextView.setText(feedItem.getText());
+                viewHolder.messengerTextView.setText(feedItem.getTitle());
+
+                if (feedItem.getFeedType() == feedItem.FEED_AUCTION){
+                    viewHolder.messageType.setImageResource(R.drawable.ic_gavel_white_24dp);
+                    //imageView.setColorFilter(Color.argb(255, 255, 255, 255)); //set tint here
+//                    viewHolder.messageType.setImageDrawable(getResources().getDrawable(R.drawable.ic_gavel_white_24dp));
+                } else if (feedItem.getFeedType() == feedItem.FEED_CHAT){
+                    viewHolder.messageType.setImageResource(R.drawable.ic_chat_white_24dp);
+                }
+
+                if (feedItem.getPhotoUrl() == null) {
                     viewHolder.messengerImageView
                             .setImageDrawable(ContextCompat
-                                    .getDrawable(MainActivity.this,
-                                            R.drawable.ic_account_circle_black_36dp));
+                                    .getDrawable(MainFeedActivity.this,
+                                            R.drawable.ic_people_black_24dp)); //ic_account_circle_black_36dp
                 } else {
-                    Glide.with(MainActivity.this)
-                            .load(friendlyMessage.getPhotoUrl())
+                    Glide.with(MainFeedActivity.this)
+                            .load(feedItem.getPhotoUrl())
                             .into(viewHolder.messengerImageView);
                 }
             }
@@ -191,7 +209,8 @@ public class MainFeedActivity extends AppCompatActivity {
 
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
-        //end*/
+        // End of New Child Entries
+
     }
 
 }

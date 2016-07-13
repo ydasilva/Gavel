@@ -5,6 +5,9 @@ package com.psyphertxt.gavel;
  */
 public class FeedItem {
 
+    public static final String FEED_AUCTION = "auction";
+    public static final String FEED_CHAT = "chat";
+
     private String mTitle;
     private String mText;
     private String mFeedType;
