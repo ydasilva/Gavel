@@ -1,6 +1,7 @@
 package com.psyphertxt.gavel;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,14 +22,11 @@ import butterknife.InjectView;
 public class ProfileNameActivity extends Activity {
     private Settings mSettings;
 
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-    @InjectView(R.id.textView) protected TextView mNameLabel;
     @InjectView(R.id.name) protected EditText mNameText;
     @InjectView(R.id.btnDone_BasicInfo) protected Button mNameButton;
 
     String userID ;
-    String userNumber ;
+    String userNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +35,10 @@ public class ProfileNameActivity extends Activity {
 
         mSettings = new Settings(this);
 
+        userNumber = mSettings.getUserNumber();
+
         ButterKnife.inject(this);
 
-//        Bundle bundle = getIntent().getExtras();
-//        if(bundle.getString("userID") != null && bundle.getString("userPhoneNumber") != null) {
-//            userID = bundle.getString("userID");
-//            userNumber = bundle.getString("userPhoneNumber");
-//        }
         if (!mSettings.getUserId().isEmpty()){
             // Success
             userID = mSettings.getUserId();
@@ -62,6 +57,7 @@ public class ProfileNameActivity extends Activity {
                             "Please enter your profile name",
                             Toast.LENGTH_LONG).show();
                 } else {
+                    mSettings.setUserName(profileName);
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                     //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
@@ -69,22 +65,27 @@ public class ProfileNameActivity extends Activity {
 
                     //format displayName:Codebender
                     Map<String,Object> value = new HashMap<>();
-                    value.put("displayName",mNameText.getText().toString());
+                    value.put("displayName",profileName);
 
                     value.put("phoneNumber",userNumber);
 
                     myRef.setValue(value);
-//                    myRef.setValue(valueId);
 
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Profile name:" + profileName + ", and id:" + userID,
-                            Toast.LENGTH_LONG).show();
+                    if (mSettings.getUserId() != Config.EMPTY_STRING && mSettings.getUserName() != Config.EMPTY_STRING && mSettings.getUserNumber() != Config.EMPTY_STRING){
+                        Toast.makeText(getApplicationContext(),
+                                "Well Done! ",
+                                Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Feed page coming up next!!",
-                            Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),
+                                "Your id is: " + mSettings.getUserId()
+                                        + ", your name is: " + mSettings.getUserName()
+                                        + " and your number is " + mSettings.getUserNumber(),
+                                Toast.LENGTH_LONG).show();
+
+                        startActivity(new Intent(ProfileNameActivity.this, MainFeedActivity.class));
+                        finish();
+                    }
+
                 }
 
             }

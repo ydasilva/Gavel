@@ -18,8 +18,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
 
 public class GetStartedActivity extends Activity {
@@ -27,6 +36,7 @@ public class GetStartedActivity extends Activity {
     private Settings mSettings;
 
     private static final String TAG = "GetStartedActivity";
+    private static Boolean IS_USER_EXISTING = null;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "Gdsq8mE638DbzxH71OnMqhDvH";
@@ -52,35 +62,6 @@ public class GetStartedActivity extends Activity {
         // Get the shared instance of the FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
-                    userID = user.getUid();
-
-                    // TODO: Link this to the "Feed" page
-                    Toast.makeText(
-                            getApplicationContext(),
-                            "Feed Page launches!!!",
-                            Toast.LENGTH_LONG).show();
-
-                    Intent intent = new Intent(GetStartedActivity.this,ProfileNameActivity.class);
-
-                    mSettings.setUserId(userID);
-
-                    startActivity(intent);
-
-                    finish();
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
 
         DigitsAuthButton digitsButton = (DigitsAuthButton) findViewById(R.id.phone_button);
 
@@ -97,7 +78,8 @@ public class GetStartedActivity extends Activity {
 
                     // Think about the possibility of signing in the user before creating an account
 
-                    signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
+//                    signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
+                    listen();
 
                 }
 
@@ -108,6 +90,71 @@ public class GetStartedActivity extends Activity {
                 }
             });
         }
+    }
+
+    private void listen() {
+        Toast.makeText(getApplicationContext(), "LISTENING!!", Toast.LENGTH_LONG).show();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (IS_USER_EXISTING != null) {
+                    if (user != null) {
+                        // User is signed in
+                        Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
+                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED IN", Toast.LENGTH_LONG).show();
+                        userID = user.getUid();
+                        mSettings.setUserId(userID);
+                        // TODO: Link this to the "Feed" page
+
+                        Log.d(TAG, "IS_USER_EXISTING is not null");
+                        if (IS_USER_EXISTING){
+                            //load the display name from the server
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference("profiles").child(userID);
+                            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()){
+                                        if (dataSnapshot.getValue() instanceof HashMap){
+                                            Map<String,Object> value = (Map<String,Object>) dataSnapshot.getValue();
+                                            mSettings.setUserName((String)value.get("displayName"));
+                                            startActivity(new Intent(GetStartedActivity.this,MainFeedActivity.class));
+                                            Toast.makeText(getApplicationContext(),
+                                                    "Loading data from Database",
+                                                    Toast.LENGTH_LONG).show();
+                                            finish();
+                                        }
+                                    }else{
+                                        startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
+
+                                        finish();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            });
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "You're a new user!",
+                                    Toast.LENGTH_LONG).show();
+
+
+
+                        }
+
+
+                    } else {
+                        // User is signed out
+                        Log.d(TAG, "onAuthStateChanged:signed_out");
+                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED OUT", Toast.LENGTH_LONG).show();
+                        String phoneNumber = mSettings.getUserNumber();
+                        signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
+                    }
+//                }
+            }
+        };
     }
 
     @Override
@@ -140,12 +187,12 @@ public class GetStartedActivity extends Activity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            //account not created
                             Toast.makeText(GetStartedActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-//                            startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
-//                            finish();
                             Log.d(TAG, "createUserWithEmail:onComplete:Authentication Succeeded");
+                         //   listen();
                         }
 
                     }
@@ -170,6 +217,7 @@ public class GetStartedActivity extends Activity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            IS_USER_EXISTING = false;
                             //Task is not successful - sign in failed
                             Log.w(TAG, "signInWithEmail", task.getException());
                             Toast.makeText(GetStartedActivity.this, "Authentication failed.",
@@ -178,9 +226,11 @@ public class GetStartedActivity extends Activity {
                             //Create the account
                             createAccount(buildEmail(userPhoneNumber),buildPassword(userPhoneNumber));
                         } else {
-//                            startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
-//                            finish();
+                            //sign in success
+                            IS_USER_EXISTING = true;
                             Log.d(TAG, "signInWithEmail:onComplete:Authentication Succeeded");
+                            Toast.makeText(getApplicationContext(), "Signed In Successfully!" , Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });

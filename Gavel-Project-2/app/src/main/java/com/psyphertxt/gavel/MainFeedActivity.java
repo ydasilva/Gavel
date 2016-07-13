@@ -2,17 +2,20 @@ package com.psyphertxt.gavel;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -49,6 +52,7 @@ public class MainFeedActivity extends AppCompatActivity {
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
+    private Settings mSettings;
 
     // Firebase instance variables
     private DatabaseReference mFirebaseDatabaseReference;
@@ -61,6 +65,11 @@ public class MainFeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
+
+        Log.d(TAG, "onCreate:started");
+
+        mSettings = new Settings(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -132,6 +141,8 @@ public class MainFeedActivity extends AppCompatActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 45);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
+
+                Toast.makeText(getApplicationContext(), "Welcome " + mSettings.getUserName() , Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -141,9 +152,11 @@ public class MainFeedActivity extends AppCompatActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
+                iconAdd.setColorFilter(Color.argb(5, 0, 0, 0));
             }
         });
 
+        Log.d(TAG, "onCreate:making the recyclerView");
         // Initialize ProgressBar and RecyclerView and FirebaseAnalytics
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
@@ -165,15 +178,23 @@ public class MainFeedActivity extends AppCompatActivity {
             protected void populateViewHolder(MessageViewHolder viewHolder,
                                               FeedItem feedItem, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                Log.d(TAG, "onCreate:populateViewHolder:progressBar:invisible");
+
                 viewHolder.messageTextView.setText(feedItem.getText());
                 viewHolder.messengerTextView.setText(feedItem.getTitle());
+                viewHolder.messageType.setColorFilter(android.R.color.black);
 
+                Log.d(TAG, "onCreate:populateViewHolder: text => " + feedItem.getText() + " & title => " + feedItem.getTitle());
                 if (feedItem.getFeedType() == feedItem.FEED_AUCTION){
+                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getFeedType());
                     viewHolder.messageType.setImageResource(R.drawable.ic_gavel_white_24dp);
+                    viewHolder.messageType.setColorFilter(R.color.colorPrimaryDark);
                     //imageView.setColorFilter(Color.argb(255, 255, 255, 255)); //set tint here
 //                    viewHolder.messageType.setImageDrawable(getResources().getDrawable(R.drawable.ic_gavel_white_24dp));
                 } else if (feedItem.getFeedType() == feedItem.FEED_CHAT){
+                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getFeedType());
                     viewHolder.messageType.setImageResource(R.drawable.ic_chat_white_24dp);
+                    viewHolder.messageType.setColorFilter(R.color.colorPrimaryDark);
                 }
 
                 if (feedItem.getPhotoUrl() == null) {
@@ -192,6 +213,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                Log.d(TAG, "onCreate:onItemRangeInserted");
                 super.onItemRangeInserted(positionStart, itemCount);
                 int friendlyMessageCount = mFirebaseAdapter.getItemCount();
                 int lastVisiblePosition =
@@ -209,6 +231,7 @@ public class MainFeedActivity extends AppCompatActivity {
 
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+        Log.d(TAG, "set Layout manager and adapter");
         // End of New Child Entries
 
     }

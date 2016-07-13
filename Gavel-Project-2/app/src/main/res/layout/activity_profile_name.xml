@@ -18,19 +18,19 @@
         android:src="@drawable/splash"
         android:layout_marginTop="50dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Profile Name"
-        android:id="@+id/textView"
-        android:layout_below="@id/imageView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:layout_marginTop="30dp"
-        android:textColor="@color/button_material_dark" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+        <!--android:text="Profile Name"-->
+        <!--android:id="@+id/textView"-->
+        <!--android:layout_below="@id/imageView"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:textStyle="bold"-->
+        <!--android:textSize="30dp"-->
+        <!--android:layout_marginTop="30dp"-->
+        <!--android:textColor="@color/button_material_dark" />-->
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,8 +38,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/name"
-        android:hint="Last Name"
-        android:layout_below="@+id/textView"
+        android:hint="Profile Name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />
 

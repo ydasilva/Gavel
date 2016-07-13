@@ -67,11 +67,11 @@ public class FeedItem {
         this.mPhotoUrl = mPhotoUrl;
     }
 
-    public Boolean isSeen(){
-        return getSeen();
-    }
-
-    public void makeSeen(){
-        setSeen(true);
-    }
+//    public Boolean isSeen(){
+//        return getSeen();
+//    }
+//
+//    public void makeSeen(){
+//        setSeen(true);
+//    }
 }
