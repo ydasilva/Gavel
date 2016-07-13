@@ -93,6 +93,7 @@ public class GetStartedActivity extends Activity {
     }
 
     private void listen() {
+
         Toast.makeText(getApplicationContext(), "LISTENING!!", Toast.LENGTH_LONG).show();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -107,42 +108,33 @@ public class GetStartedActivity extends Activity {
                         mSettings.setUserId(userID);
                         // TODO: Link this to the "Feed" page
 
-                        Log.d(TAG, "IS_USER_EXISTING is not null");
-                        if (IS_USER_EXISTING){
-                            //load the display name from the server
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference("profiles").child(userID);
-                            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()){
-                                        if (dataSnapshot.getValue() instanceof HashMap){
-                                            Map<String,Object> value = (Map<String,Object>) dataSnapshot.getValue();
-                                            mSettings.setUserName((String)value.get("displayName"));
-                                            startActivity(new Intent(GetStartedActivity.this,MainFeedActivity.class));
-                                            Toast.makeText(getApplicationContext(),
-                                                    "Loading data from Database",
-                                                    Toast.LENGTH_LONG).show();
-                                            finish();
-                                        }
-                                    }else{
-                                        startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
-
+                        //load the display name from the server
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference myRef = database.getReference("profiles").child(userID);
+                        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()){
+                                    if (dataSnapshot.getValue() instanceof HashMap){
+                                        Map<String,Object> value = (Map<String,Object>) dataSnapshot.getValue();
+                                        mSettings.setUserName((String)value.get("displayName"));
+                                        startActivity(new Intent(GetStartedActivity.this,MainFeedActivity.class));
+                                        Toast.makeText(getApplicationContext(),
+                                                "Loading data from Database",
+                                                Toast.LENGTH_LONG).show();
                                         finish();
                                     }
+                                }else{
+                                    startActivity(new Intent(GetStartedActivity.this,ProfileNameActivity.class));
+
+                                    finish();
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {}
-                            });
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "You're a new user!",
-                                    Toast.LENGTH_LONG).show();
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
 
-
-
-                        }
 
 
                     } else {
@@ -155,12 +147,13 @@ public class GetStartedActivity extends Activity {
 //                }
             }
         };
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+
     }
 
     @Override
