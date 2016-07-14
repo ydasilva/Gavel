@@ -98,8 +98,9 @@ public class MainFeedActivity extends AppCompatActivity {
                 redActionButtonContentMargin,
                 redActionButtonContentMargin);
 
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
+        final FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                 .setContentView(iconAdd, fabIconAddParams)
+//                .setBackgroundDrawable(R.drawable.button_action_red_selector) //blue
                 .setBackgroundDrawable(R.drawable.button_action_red_selector)
                 .setLayoutParams(addParams)
                 .build();
@@ -142,6 +143,9 @@ public class MainFeedActivity extends AppCompatActivity {
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
 
+                //change ationButtonbackground to red
+//                actionButton.setBackground(getDrawable(R.drawable.button_action_red_selector));
+
                 Toast.makeText(getApplicationContext(), "Welcome " + mSettings.getUserName() , Toast.LENGTH_LONG).show();
             }
 
@@ -152,6 +156,8 @@ public class MainFeedActivity extends AppCompatActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
+
+                //change ationButtonbackground to blue
                 iconAdd.setColorFilter(Color.argb(5, 0, 0, 0));
             }
         });

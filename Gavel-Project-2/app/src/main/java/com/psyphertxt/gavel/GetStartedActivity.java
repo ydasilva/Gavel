@@ -76,9 +76,6 @@ public class GetStartedActivity extends Activity {
                     Toast.makeText(getApplicationContext(), "Authentication successful for "
                             + phoneNumber, Toast.LENGTH_LONG).show();
 
-                    // Think about the possibility of signing in the user before creating an account
-
-//                    signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
                     listen();
 
                 }
@@ -87,6 +84,7 @@ public class GetStartedActivity extends Activity {
                 public void failure(DigitsException exception) {
                     Log.d("Digits", "Sign in with Digits failure", exception);
                     Toast.makeText(getApplicationContext(), "Authentication FAILED ", Toast.LENGTH_LONG).show();
+
                 }
             });
         }
