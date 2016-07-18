@@ -15,13 +15,13 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <!--FAB Dimensions-->
-    <dimen name="red_action_button_size">108dp</dimen>
+    <dimen name="red_action_button_size">96dp</dimen> <!--was 108dp-->
     <dimen name="red_action_button_margin">48dp</dimen>
 
     <dimen name="red_action_button_content_size">30dp</dimen>
     <dimen name="red_action_button_content_margin">36dp</dimen>
 
-    <dimen name="red_action_menu_radius">96dp</dimen>
+    <dimen name="red_action_menu_radius">96dp</dimen> <!--was 108dp-->
     <dimen name="blue_sub_action_button_size">48dp</dimen>
     <dimen name="blue_sub_action_button_content_margin">16dp</dimen>
 

@@ -5,24 +5,24 @@ package com.psyphertxt.gavel;
  */
 public class FeedItem {
 
-    public static final String FEED_AUCTION = "auction";
-    public static final String FEED_CHAT = "chat";
+    public static final int FEED_AUCTION = 0;
+    public static final int FEED_CHAT = 1;
 
     private String mTitle;
     private String mText;
-    private String mFeedType;
-    private Boolean mSeen;
+    private int mType;
+    private Boolean mIcon;
     private String mPhotoUrl;
 
     public FeedItem(){
 
     }
 
-    public FeedItem(String title, String text, String type, String photoUrl) {
+    public FeedItem(String title, String text, int type, String photoUrl) {
         mTitle = title;
         mText = text;
-        mFeedType = type;
-        mSeen = false;
+        mType = type;
+        mIcon = false;
         mPhotoUrl = photoUrl;
     }
 
@@ -43,20 +43,20 @@ public class FeedItem {
         this.mText = mText;
     }
 
-    public String getFeedType() {
-        return mFeedType;
+    public int getType() {
+        return mType;
     }
 
-    public void setFeedType(String mFeedType) {
-        this.mFeedType = mFeedType;
+    public void setType(int mType) {
+        this.mType = mType;
     }
 
-    public Boolean getSeen() {
-        return mSeen;
+    public Boolean getIcon() {
+        return mIcon;
     }
 
-    public void setSeen(Boolean mSeen) {
-        this.mSeen = mSeen;
+    public void setIcon(Boolean mSeen) {
+        this.mIcon = mSeen;
     }
 
     public String getPhotoUrl() {
@@ -68,10 +68,10 @@ public class FeedItem {
     }
 
 //    public Boolean isSeen(){
-//        return getSeen();
+//        return getIcon();
 //    }
 //
 //    public void makeSeen(){
-//        setSeen(true);
+//        setIcon(true);
 //    }
 }

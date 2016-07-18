@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -26,22 +28,49 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainFeedActivity extends AppCompatActivity {
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder {
+    public static class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView messageTextView;
         public TextView messengerTextView;
         public CircleImageView messengerImageView;
         public ImageView messageType;
+        public int iconNum;
 
         public MessageViewHolder(View v) {
             super(v);
+            v.setOnClickListener(this);
             messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
             messageType = (ImageView) itemView.findViewById(R.id.messageTypeIcon);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": Clicked.", Toast.LENGTH_LONG).show();
+
+            if (iconNum == FeedItem.FEED_AUCTION){
+                messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
+                Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": AUCTION.", Toast.LENGTH_LONG).show();
+            } else {
+                messageType.setImageResource(R.drawable.ic_chat_black_24dp);
+                Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": CHAT.", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+        public void setIconNum (int icon) {
+            this.iconNum = icon;
+        }
+
+        public int getIconNum (){
+            return this.iconNum;
         }
     }
 
@@ -53,6 +82,7 @@ public class MainFeedActivity extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private ProgressBar mProgressBar;
     private Settings mSettings;
+    private View mView;
 
     // Firebase instance variables
     private DatabaseReference mFirebaseDatabaseReference;
@@ -69,6 +99,7 @@ public class MainFeedActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate:started");
 
         mSettings = new Settings(this);
+        mView = findViewById(R.id.feed_overlay);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -101,13 +132,13 @@ public class MainFeedActivity extends AppCompatActivity {
         final FloatingActionButton actionButton = new FloatingActionButton.Builder(this)
                 .setContentView(iconAdd, fabIconAddParams)
 //                .setBackgroundDrawable(R.drawable.button_action_red_selector) //blue
-                .setBackgroundDrawable(R.drawable.button_action_red_selector)
+                .setBackgroundDrawable(R.drawable.button_action_blue_selector)
                 .setLayoutParams(addParams)
                 .build();
 
         // Set up customized SubActionButtons for the right center menu
         SubActionButton.Builder subBuilder = new SubActionButton.Builder(this);
-        subBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_blue_selector));
+        subBuilder.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_white_selector));
 
         FrameLayout.LayoutParams blueContentParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         blueContentParams.setMargins(blueSubActionButtonContentMargin,
@@ -123,12 +154,17 @@ public class MainFeedActivity extends AppCompatActivity {
         ImageView iconGavel = new ImageView(this);
         ImageView iconChat = new ImageView(this);
 
-        iconGavel.setImageDrawable(getResources().getDrawable(R.drawable.ic_gavel_white_24dp));
-        iconChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_chat_white_24dp));
+        iconGavel.setImageDrawable(getResources().getDrawable(R.drawable.ic_gavel_red_24dp));
+        iconChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_chat_red_24dp));
+
+        //Building the buttons
+        //SubActionButton button1 = itemBuilder.setContentView(itemIcon).build();
+        SubActionButton gavelSubButton = subBuilder.setContentView(iconGavel, blueContentParams).build();
+        SubActionButton chatSubButton = subBuilder.setContentView(iconChat, blueContentParams).build();
 
         final FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(subBuilder.setContentView(iconGavel, blueContentParams).build())
-                .addSubActionView(subBuilder.setContentView(iconChat, blueContentParams).build())
+                .addSubActionView(gavelSubButton)
+                .addSubActionView(chatSubButton)
                 .setRadius(redActionMenuRadius)
                 .attachTo(actionButton)
                 .build();
@@ -143,8 +179,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
 
-                //change ationButtonbackground to red
-//                actionButton.setBackground(getDrawable(R.drawable.button_action_red_selector));
+                mView.setVisibility(View.VISIBLE);
 
                 Toast.makeText(getApplicationContext(), "Welcome " + mSettings.getUserName() , Toast.LENGTH_LONG).show();
             }
@@ -157,8 +192,77 @@ public class MainFeedActivity extends AppCompatActivity {
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(iconAdd, pvhR);
                 animation.start();
 
-                //change ationButtonbackground to blue
-                iconAdd.setColorFilter(Color.argb(5, 0, 0, 0));
+                mView.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        //Handling the subButtons
+        gavelSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
+                DatabaseReference myDataRef = database.getReference("messages").child(mSettings.getUserId());
+                DatabaseReference myFeedRef = myDataRef.push();
+
+                Map<String,Object> value = new HashMap<>();
+                value.put("text","New Auction Text");
+                value.put("title","New Auction Title");
+                value.put("type",FeedItem.FEED_AUCTION);
+//                value.put("icon",true);
+
+                myFeedRef.setValue(value);
+                Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+                actionMenu.close(true);
+            }
+        });
+
+        chatSubButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
+                DatabaseReference myDataRef = database.getReference("messages").child(mSettings.getUserId());
+                DatabaseReference myFeedRef = myDataRef.push();
+
+                Map<String,Object> value = new HashMap<>();
+                value.put("text","New Chat Text");
+                value.put("title","New Chat Title");
+                value.put("type",FeedItem.FEED_CHAT);
+//                value.put("icon",false);
+
+                myFeedRef.setValue(value);
+                Toast.makeText(getApplicationContext(), "Added a new Chat" , Toast.LENGTH_LONG).show();
+                actionMenu.close(true);
+            }
+        });
+
+        //handling the overlay
+        mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionMenu.close(true);
+                v.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                actionMenu.close(true);
+                v.setVisibility(View.INVISIBLE);
+                return false;
+            }
+        });
+
+        mView.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                actionMenu.close(true);
+                v.setVisibility(View.INVISIBLE);
+                return false;
             }
         });
 
@@ -171,6 +275,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
+
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FeedItem,
@@ -178,7 +283,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 FeedItem.class,
                 R.layout.feed_item,
                 MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD)) {
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(mSettings.getUserId())) {
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
@@ -190,17 +295,21 @@ public class MainFeedActivity extends AppCompatActivity {
                 viewHolder.messengerTextView.setText(feedItem.getTitle());
                 viewHolder.messageType.setColorFilter(android.R.color.black);
 
+                viewHolder.setIconNum(feedItem.getType());
+
                 Log.d(TAG, "onCreate:populateViewHolder: text => " + feedItem.getText() + " & title => " + feedItem.getTitle());
-                if (feedItem.getFeedType() == feedItem.FEED_AUCTION){
-                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getFeedType());
-                    viewHolder.messageType.setImageResource(R.drawable.ic_gavel_white_24dp);
-                    viewHolder.messageType.setColorFilter(R.color.colorPrimaryDark);
-                    //imageView.setColorFilter(Color.argb(255, 255, 255, 255)); //set tint here
-//                    viewHolder.messageType.setImageDrawable(getResources().getDrawable(R.drawable.ic_gavel_white_24dp));
-                } else if (feedItem.getFeedType() == feedItem.FEED_CHAT){
-                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getFeedType());
-                    viewHolder.messageType.setImageResource(R.drawable.ic_chat_white_24dp);
-                    viewHolder.messageType.setColorFilter(R.color.colorPrimaryDark);
+
+                Log.d(TAG, "onCreate:populateViewHolder: type => " + feedItem.getType());
+
+                Log.d(TAG, "onCreate:populateViewHolder: icon => " + feedItem.getIcon());
+//                Toast.makeText(getApplicationContext(), "Feed Type: " + feedItem.getFeedType() , Toast.LENGTH_LONG).show();
+
+                if (feedItem.getType() == FeedItem.FEED_AUCTION){
+                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
+                    viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+                } else if (feedItem.getType() == FeedItem.FEED_CHAT){
+                    Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
+                    viewHolder.messageType.setImageResource(R.drawable.ic_chat_red_24dp);
                 }
 
                 if (feedItem.getPhotoUrl() == null) {
