@@ -1,5 +1,6 @@
 package com.psyphertxt.gavel;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -64,11 +65,12 @@ public class NewAuctionActivity extends AppCompatActivity {
 
                     myFeedRef.setValue(value);
                     Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+
+                    startActivity(new Intent(NewAuctionActivity.this, MainFeedActivity.class));
+                    finish();
                 }
             }
         });
-
-
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

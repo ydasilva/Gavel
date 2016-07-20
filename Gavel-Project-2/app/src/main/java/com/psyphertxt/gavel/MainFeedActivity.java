@@ -282,7 +282,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false); //start from the top
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
