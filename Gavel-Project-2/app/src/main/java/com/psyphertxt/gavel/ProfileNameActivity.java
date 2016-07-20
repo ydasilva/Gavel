@@ -39,6 +39,7 @@ public class ProfileNameActivity extends Activity {
 
         ButterKnife.inject(this);
 
+        //Store Id if it's not available
         if (!mSettings.getUserId().isEmpty()){
             // Success
             userID = mSettings.getUserId();

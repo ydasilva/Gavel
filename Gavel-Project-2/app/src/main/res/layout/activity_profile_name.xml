@@ -32,16 +32,22 @@
         <!--android:layout_marginTop="30dp"-->
         <!--android:textColor="@color/button_material_dark" />-->
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/name_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/name"
-        android:hint="Profile Name"
         android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp" />
+        android:layout_centerHorizontal="true">
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/name"
+            android:hint="Profile Name"
+            android:layout_marginTop="25dp" />
+    </android.support.design.widget.TextInputLayout>
+
 
     <Button
         android:id="@+id/btnDone_BasicInfo"
@@ -49,7 +55,7 @@
         android:layout_height="@dimen/button_height"
         android:text="Done"
         android:background="@drawable/primary_button_selector"
-        android:layout_below="@+id/name"
+        android:layout_below="@+id/name_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:textColor="@color/colorAccent"/>

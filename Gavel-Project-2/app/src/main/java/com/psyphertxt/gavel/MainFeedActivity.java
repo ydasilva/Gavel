@@ -41,6 +41,7 @@ public class MainFeedActivity extends AppCompatActivity {
         public CircleImageView messengerImageView;
         public ImageView messageType;
         public int iconNum;
+        public Boolean seen;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -56,6 +57,7 @@ public class MainFeedActivity extends AppCompatActivity {
             Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": Clicked.", Toast.LENGTH_LONG).show();
 
             if (iconNum == FeedItem.FEED_AUCTION){
+                //todo: check if it was seen and set seen to true >>[setSeen(true)]<< if it was false
                 messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
                 Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": AUCTION.", Toast.LENGTH_LONG).show();
             } else {
@@ -72,6 +74,16 @@ public class MainFeedActivity extends AppCompatActivity {
         public int getIconNum (){
             return this.iconNum;
         }
+
+        public void setSeen (Boolean seen) {
+            this.seen = seen;
+            //todo: set this on firebase also
+        }
+
+        public Boolean getSeen (){
+            return this.seen;
+        }
+
     }
 
     private static final String TAG = "MainFeedActivity";
@@ -88,8 +100,6 @@ public class MainFeedActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseRecyclerAdapter<FeedItem, MessageViewHolder> mFirebaseAdapter;
     private FirebaseAnalytics mFirebaseAnalytics;
-
-//TODO: change the colors of the fab buttons
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,6 +282,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false); //start from the top
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -301,13 +312,15 @@ public class MainFeedActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onCreate:populateViewHolder: type => " + feedItem.getType());
 
-                Log.d(TAG, "onCreate:populateViewHolder: icon => " + feedItem.getIcon());
+                Log.d(TAG, "onCreate:populateViewHolder: seen => " + feedItem.getSeen());
 //                Toast.makeText(getApplicationContext(), "Feed Type: " + feedItem.getFeedType() , Toast.LENGTH_LONG).show();
 
                 if (feedItem.getType() == FeedItem.FEED_AUCTION){
+                    //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
                     viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
                 } else if (feedItem.getType() == FeedItem.FEED_CHAT){
+                    //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
                     viewHolder.messageType.setImageResource(R.drawable.ic_chat_red_24dp);
                 }

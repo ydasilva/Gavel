@@ -11,18 +11,19 @@ public class FeedItem {
     private String mTitle;
     private String mText;
     private int mType;
-    private Boolean mIcon;
+    private Boolean mSeen;
+
     private String mPhotoUrl;
 
     public FeedItem(){
 
     }
 
-    public FeedItem(String title, String text, int type, String photoUrl) {
+    public FeedItem(String title, String text, int type, Boolean seen, String photoUrl) {
         mTitle = title;
         mText = text;
         mType = type;
-        mIcon = false;
+        mSeen = seen;
         mPhotoUrl = photoUrl;
     }
 
@@ -51,12 +52,12 @@ public class FeedItem {
         this.mType = mType;
     }
 
-    public Boolean getIcon() {
-        return mIcon;
+    public Boolean getSeen() {
+        return mSeen;
     }
 
-    public void setIcon(Boolean mSeen) {
-        this.mIcon = mSeen;
+    public void setSeen(Boolean mSeen) {
+        this.mSeen = mSeen;
     }
 
     public String getPhotoUrl() {
