@@ -257,7 +257,7 @@ public class MainFeedActivity extends AppCompatActivity {
         chatSubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                /*FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                 //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
                 DatabaseReference myDataRef = database.getReference(FeedItem.DATABASE_REFERENCE_NAME);
@@ -271,8 +271,8 @@ public class MainFeedActivity extends AppCompatActivity {
                 value.put("key",myFeedRef.getKey());
                 value.put("authorId",mSettings.getUserId());
 
-                myFeedRef.setValue(value);
-                Toast.makeText(getApplicationContext(), "Added a new Chat" , Toast.LENGTH_LONG).show();
+                myFeedRef.setValue(value);*/
+                Toast.makeText(getApplicationContext(), "Open a new activity to handle this action" , Toast.LENGTH_LONG).show();
                 actionMenu.close(true);
             }
         });
@@ -330,7 +330,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 Log.d(TAG, "onCreate:populateViewHolder:progressBar:invisible");
 
-                viewHolder.messageTextView.setText(feedItem.getText());
+                viewHolder.messageTextView.setText(trimText(feedItem.getText()));
                 viewHolder.messengerTextView.setText(feedItem.getTitle());
                 viewHolder.messageType.setColorFilter(android.R.color.black);
 
@@ -398,6 +398,18 @@ public class MainFeedActivity extends AppCompatActivity {
         Log.d(TAG, "set Layout manager and adapter");
         // End of New Child Entries
 
+    }
+
+    public static String truncateText(String text, int max) {
+        return text.substring(0, Math.min(text.length(), max)) + "...";
+
+    }
+
+    public static String trimText(String text) {
+        if (text.length() >= 100) {
+            return truncateText(text, 60);
+        }
+        return text;
     }
 
 }

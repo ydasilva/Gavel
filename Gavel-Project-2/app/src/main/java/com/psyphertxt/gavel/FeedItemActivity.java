@@ -60,7 +60,7 @@ public class FeedItemActivity extends AppCompatActivity {
 
                         toolbar.setTitle(item.getTitle());
                         Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("/" + FeedItem.DATABASE_REFERENCE_NAME + "/" + key + "/seen","true");
+                        childUpdates.put("/" + FeedItem.DATABASE_REFERENCE_NAME + "/" + key + "/seen",true);
                         mDatabase.updateChildren(childUpdates);
 //                        childUpdates.put("/posts/" + key, postValues);
 //                        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
@@ -71,6 +71,7 @@ public class FeedItemActivity extends AppCompatActivity {
                         Log.w(TAG, "getUser:onCancelled", databaseError.toException());
                     }
                 });
+
 
         mDatabase.child(Auction.DATABASE_REFERENCE_NAME).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

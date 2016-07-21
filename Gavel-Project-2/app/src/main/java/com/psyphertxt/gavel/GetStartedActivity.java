@@ -1,7 +1,6 @@
 package com.psyphertxt.gavel;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -98,7 +97,7 @@ public class GetStartedActivity extends Activity {
 
     private void listen() {
 
-        Toast.makeText(getApplicationContext(), "LISTENING!!", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "LISTENING!!", Toast.LENGTH_LONG).show();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -107,7 +106,7 @@ public class GetStartedActivity extends Activity {
                     if (user != null) {
                         // User is signed in
                         Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
-                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED IN", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED IN", Toast.LENGTH_LONG).show();
                         userID = user.getUid();
                         mSettings.setUserId(userID);
                         // TODO: Link this to the "Feed" page
@@ -125,9 +124,9 @@ public class GetStartedActivity extends Activity {
                                         mSettings.setUserName((String)value.get("displayName"));
 
                                         startActivity(new Intent(GetStartedActivity.this,MainFeedActivity.class));
-                                        Toast.makeText(getApplicationContext(),
-                                                "Loading data from Database",
-                                                Toast.LENGTH_LONG).show();
+//                                        Toast.makeText(getApplicationContext(),
+//                                                "Loading data from Database",
+//                                                Toast.LENGTH_LONG).show();
                                         finish();
                                     }
                                 }else{
@@ -146,7 +145,7 @@ public class GetStartedActivity extends Activity {
                     } else {
                         // User is signed out
                         Log.d(TAG, "onAuthStateChanged:signed_out");
-                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED OUT", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), "LISTENING!! >>> SIGNED OUT", Toast.LENGTH_LONG).show();
                         String phoneNumber = mSettings.getUserNumber();
                         signIn(buildEmail(phoneNumber),buildPassword(phoneNumber));
                     }
@@ -173,7 +172,7 @@ public class GetStartedActivity extends Activity {
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount: " + email);
 
-        Toast.makeText(getApplicationContext(), "Creating a new User Account", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "Creating a new User Account", Toast.LENGTH_LONG).show();
 
         // [START create_user_with_email]
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -187,8 +186,8 @@ public class GetStartedActivity extends Activity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             //account not created
-                            Toast.makeText(GetStartedActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(GetStartedActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d(TAG, "createUserWithEmail:onComplete:Authentication Succeeded");
                          //   listen();
@@ -202,7 +201,7 @@ public class GetStartedActivity extends Activity {
     private void signIn(String email, final String password) {
         Log.d(TAG, "signIn:" + email);
 
-        Toast.makeText(getApplicationContext(), "Signing In", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "Signing In", Toast.LENGTH_LONG).show();
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email,password)
@@ -219,8 +218,8 @@ public class GetStartedActivity extends Activity {
                             IS_USER_EXISTING = false;
                             //Task is not successful - sign in failed
                             Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(GetStartedActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(GetStartedActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
 
                             //Create the account
                             createAccount(buildEmail(userPhoneNumber),buildPassword(userPhoneNumber));
@@ -228,7 +227,7 @@ public class GetStartedActivity extends Activity {
                             //sign in success
                             IS_USER_EXISTING = true;
                             Log.d(TAG, "signInWithEmail:onComplete:Authentication Succeeded");
-                            Toast.makeText(getApplicationContext(), "Signed In Successfully!" , Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getApplicationContext(), "Signed In Successfully!" , Toast.LENGTH_LONG).show();
 
                         }
                     }

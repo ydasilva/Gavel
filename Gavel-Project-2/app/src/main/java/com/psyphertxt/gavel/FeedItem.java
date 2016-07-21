@@ -12,7 +12,6 @@ public class FeedItem {
     private String mTitle;
     private String mText;
     private int mType;
-    private Boolean mSeen;
     private String mKey;
     private String mAuthorId;
 
@@ -22,11 +21,10 @@ public class FeedItem {
 
     }
 
-    public FeedItem(String title, String text, int type, Boolean seen) {
+    public FeedItem(String title, String text, int type) {
         mTitle = title;
         mText = text;
         mType = type;
-        mSeen = seen;
     }
 
 
@@ -54,15 +52,6 @@ public class FeedItem {
 
     public void setType(int mType) {
         this.mType = mType;
-    }
-
-
-    public Boolean getSeen() {
-        return mSeen;
-    }
-
-    public void setSeen(Boolean mSeen) {
-        this.mSeen = mSeen;
     }
 
 

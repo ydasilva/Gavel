@@ -12,15 +12,49 @@
     tools:context="com.psyphertxt.gavel.FeedItemActivity"
     tools:showIn="@layout/activity_feed_item">
 
+    <ImageView
+        android:id="@+id/photo_feedItem"
+        android:layout_width="@dimen/radius_large"
+        android:layout_height="@dimen/radius_large"
+        android:src="@drawable/youss_selfie"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignLeft="@id/photo_feedItem"
+        android:text="Large Text"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp" />
+
+    <View
+        android:id="@+id/seperator1"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/textView2"
+        android:background="@android:color/darker_gray"
+        android:layout_margin="@dimen/activity_vertical_margin"/>
+
     <Button
         android:id="@+id/btnLive_FeedItem"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/auction_text_layout"
-        android:layout_marginTop="@dimen/button_height"
-        android:text="Start Live Video"
+        android:text="Join Auction"
         android:textColor="@color/colorAccent"
-        android:background="@drawable/primary_button_selector" />
+        android:background="@drawable/primary_button_selector"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/seperator1"
+        android:layout_margin="@dimen/activity_vertical_margin" />
 
 </RelativeLayout>

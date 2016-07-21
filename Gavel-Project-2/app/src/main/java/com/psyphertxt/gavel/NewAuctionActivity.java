@@ -74,8 +74,8 @@ public class NewAuctionActivity extends AppCompatActivity {
 
 
                     //creating an auction
-                    DatabaseReference myAuctionDataRef = database.getReference(Auction.DATABASE_REFERENCE_NAME);
-                    DatabaseReference auctionRef = myAuctionDataRef.child(myFeedRef.getKey());
+                    DatabaseReference myDataRef = database.getReference();
+                    DatabaseReference auctionRef = myDataRef.child(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
 
                     ArrayList<String> participants = new ArrayList<>();
 
