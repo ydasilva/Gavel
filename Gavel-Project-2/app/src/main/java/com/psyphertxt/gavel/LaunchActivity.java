@@ -18,9 +18,11 @@ public class LaunchActivity extends AppCompatActivity {
         if (mSettings.getUserId().isEmpty()){
             //redirect to Get Started
             startActivity(new Intent(LaunchActivity.this, GetStartedActivity.class));
+            finish();
         } else {
             //redirect to feed
             startActivity(new Intent(LaunchActivity.this, MainFeedActivity.class));
+            finish();
         }
     }
 }

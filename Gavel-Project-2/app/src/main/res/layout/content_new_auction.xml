@@ -16,7 +16,8 @@
         android:id="@+id/auction_title_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:theme="@style/TextLabel">
         <EditText
             android:id="@+id/auction_title_field"
             android:layout_width="match_parent"
@@ -29,15 +30,35 @@
         android:id="@+id/auction_text_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/auction_title_layout"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@id/auction_title_layout"
+        android:layout_centerHorizontal="true"
+        android:theme="@style/TextLabel">
         <EditText
             android:id="@+id/auction_text_field"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="12"
-            android:inputType="text"
-            android:hint="Auction Text"/>
+            android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+            android:maxLength="2000"
+            android:maxLines="4"
+            android:scrollHorizontally="false"
+            android:hint="Auction Description"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/auction_price_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/auction_text_layout"
+        android:layout_centerHorizontal="true"
+        android:theme="@style/TextLabel">
+        <EditText
+            android:id="@+id/auction_price_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="8"
+            android:inputType="numberDecimal"
+            android:hint="Starting Price"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -45,7 +66,7 @@
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/auction_text_layout"
+        android:layout_below="@+id/auction_price_layout"
         android:layout_marginTop="@dimen/button_height"
         android:text="Create"
         android:textColor="@color/colorAccent"
@@ -55,7 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
+use it on the TextInputLayout like so
+    android:theme="@style/PrivateTextLabel"
     </LinearLayout>-->
 
 </RelativeLayout>

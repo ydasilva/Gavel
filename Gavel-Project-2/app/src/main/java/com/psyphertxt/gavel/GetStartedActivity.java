@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.digits.sdk.android.AuthCallback;
@@ -49,12 +50,16 @@ public class GetStartedActivity extends Activity {
     private String userPhoneNumber;
     private String userID;
 
+    private ProgressBar mProgressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_started);
 
         mSettings = new Settings(this);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar_getStarted);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
         Fabric.with(this, new TwitterCore(authConfig), new Digits());
@@ -77,6 +82,7 @@ public class GetStartedActivity extends Activity {
                             + phoneNumber, Toast.LENGTH_LONG).show();
 
                     listen();
+                    mProgressBar.setVisibility(ProgressBar.VISIBLE);
 
                 }
 
@@ -112,10 +118,12 @@ public class GetStartedActivity extends Activity {
                         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                                 if (dataSnapshot.exists()){
                                     if (dataSnapshot.getValue() instanceof HashMap){
                                         Map<String,Object> value = (Map<String,Object>) dataSnapshot.getValue();
                                         mSettings.setUserName((String)value.get("displayName"));
+
                                         startActivity(new Intent(GetStartedActivity.this,MainFeedActivity.class));
                                         Toast.makeText(getApplicationContext(),
                                                 "Loading data from Database",

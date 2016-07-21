@@ -2,6 +2,7 @@ package com.psyphertxt.gavel;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ public class NewAuctionActivity extends AppCompatActivity {
 
     @InjectView(R.id.auction_title_field) protected EditText mTitle;
     @InjectView(R.id.auction_text_field) protected EditText mText;
+    @InjectView(R.id.auction_price_field) protected EditText mPrice;
     @InjectView(R.id.btnCreate_NewAuction) protected Button mCreateButton;
 
     @Override
@@ -43,8 +46,9 @@ public class NewAuctionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String auctionTitle = mTitle.getText().toString();
                 String auctionText = mText.getText().toString();
+                String auctionStartingPrice = mPrice.getText().toString();
 
-                if (auctionTitle.trim().equals("") || auctionText.trim().equals("")){
+                if (auctionTitle.trim().equals("") || auctionText.trim().equals("") || auctionStartingPrice.trim().equals("")){
                     //The field is empty
                     Toast.makeText(
                             getApplicationContext(),
@@ -54,16 +58,36 @@ public class NewAuctionActivity extends AppCompatActivity {
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                     //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
-                    DatabaseReference myDataRef = database.getReference("messages").child(mSettings.getUserId());
-                    DatabaseReference myFeedRef = myDataRef.push();
+                    DatabaseReference myMessageDataRef = database.getReference(FeedItem.DATABASE_REFERENCE_NAME);
+                    DatabaseReference myFeedRef = myMessageDataRef.push();
 
                     Map<String,Object> value = new HashMap<>();
                     value.put("text",auctionText);
                     value.put("title",auctionTitle);
                     value.put("type",FeedItem.FEED_AUCTION);
                     value.put("seen",false);
+                    value.put("key",myFeedRef.getKey());
+                    value.put("authorId",mSettings.getUserId());
 
                     myFeedRef.setValue(value);
+                    Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+
+
+                    //creating an auction
+                    DatabaseReference myAuctionDataRef = database.getReference(Auction.DATABASE_REFERENCE_NAME);
+                    DatabaseReference auctionRef = myAuctionDataRef.child(myFeedRef.getKey());
+
+                    ArrayList<String> participants = new ArrayList<>();
+
+                    Map<String,Object> newAuction = new HashMap<>();
+                    value.put("auctionDescription",auctionText);
+                    value.put("auctionTitle",auctionTitle);
+                    value.put("auctionAuthorId",mSettings.getUserId());
+                    value.put("auctionStartPrice",auctionStartingPrice);
+                    value.put("auctionEndDate",null);
+                    value.put("auctionParticipantsId",participants);
+
+                    auctionRef.setValue(newAuction);
                     Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
 
                     startActivity(new Intent(NewAuctionActivity.this, MainFeedActivity.class));
@@ -72,15 +96,7 @@ public class NewAuctionActivity extends AppCompatActivity {
             }
         });
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.psyphertxt.gavel;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -35,13 +36,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainFeedActivity extends AppCompatActivity {
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView messageTextView;
         public TextView messengerTextView;
         public CircleImageView messengerImageView;
         public ImageView messageType;
         public int iconNum;
         public Boolean seen;
+        public String key;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -54,41 +56,62 @@ public class MainFeedActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": Clicked.", Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": Clicked." + "Key = " + getKey(), Toast.LENGTH_LONG).show();
 
-            if (iconNum == FeedItem.FEED_AUCTION){
+          //
+
+            Intent feedIntent = new Intent(v.getContext(),FeedItemActivity.class);
+            feedIntent.putExtra("key",getKey());
+            v.getContext().startActivity(feedIntent);
+
+            /*if (!seen){
+                setSeen(true);
+            }
+
+            if (iconNum == FeedItem.FEED_AUCTION) {
                 //todo: check if it was seen and set seen to true >>[setSeen(true)]<< if it was false
-                messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
+                if (seen) {
+                    messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+                } else {
+                    messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
+                }
+
                 Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": AUCTION.", Toast.LENGTH_LONG).show();
             } else {
                 messageType.setImageResource(R.drawable.ic_chat_black_24dp);
                 Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": CHAT.", Toast.LENGTH_LONG).show();
-            }
+            }*/
 
         }
 
-        public void setIconNum (int icon) {
+        public void setIconNum(int icon) {
             this.iconNum = icon;
         }
 
-        public int getIconNum (){
+        public int getIconNum() {
             return this.iconNum;
         }
 
-        public void setSeen (Boolean seen) {
+        public void setSeen(Boolean seen) {
             this.seen = seen;
             //todo: set this on firebase also
         }
 
-        public Boolean getSeen (){
+        public Boolean getSeen() {
             return this.seen;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return this.key;
         }
 
     }
 
     private static final String TAG = "MainFeedActivity";
-
-    public static final String MESSAGES_CHILD = "messages";
 
     private RecyclerView mMessageRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
@@ -210,7 +233,7 @@ public class MainFeedActivity extends AppCompatActivity {
         gavelSubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                /*FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                 //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
                 DatabaseReference myDataRef = database.getReference("messages").child(mSettings.getUserId());
@@ -223,7 +246,10 @@ public class MainFeedActivity extends AppCompatActivity {
 //                value.put("icon",true);
 
                 myFeedRef.setValue(value);
-                Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();*/
+
+                startActivity(new Intent(MainFeedActivity.this,NewAuctionActivity.class));
+
                 actionMenu.close(true);
             }
         });
@@ -234,14 +260,16 @@ public class MainFeedActivity extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                 //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
-                DatabaseReference myDataRef = database.getReference("messages").child(mSettings.getUserId());
+                DatabaseReference myDataRef = database.getReference(FeedItem.DATABASE_REFERENCE_NAME);
                 DatabaseReference myFeedRef = myDataRef.push();
 
                 Map<String,Object> value = new HashMap<>();
                 value.put("text","New Chat Text");
                 value.put("title","New Chat Title");
                 value.put("type",FeedItem.FEED_CHAT);
-//                value.put("icon",false);
+                value.put("seen",false);
+                value.put("key",myFeedRef.getKey());
+                value.put("authorId",mSettings.getUserId());
 
                 myFeedRef.setValue(value);
                 Toast.makeText(getApplicationContext(), "Added a new Chat" , Toast.LENGTH_LONG).show();
@@ -282,7 +310,7 @@ public class MainFeedActivity extends AppCompatActivity {
         mMessageRecyclerView = (RecyclerView) findViewById(R.id.feedRecyclerView);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setStackFromEnd(false); //start from the top
-//        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); //todo: tried it and it works
         mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -294,7 +322,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 FeedItem.class,
                 R.layout.feed_item,
                 MessageViewHolder.class,
-                mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(mSettings.getUserId())) {
+                mFirebaseDatabaseReference.child(FeedItem.DATABASE_REFERENCE_NAME)) {
 
             @Override
             protected void populateViewHolder(MessageViewHolder viewHolder,
@@ -306,19 +334,27 @@ public class MainFeedActivity extends AppCompatActivity {
                 viewHolder.messengerTextView.setText(feedItem.getTitle());
                 viewHolder.messageType.setColorFilter(android.R.color.black);
 
+                viewHolder.setSeen(feedItem.getSeen());
                 viewHolder.setIconNum(feedItem.getType());
+                viewHolder.setKey(feedItem.getKey());
 
                 Log.d(TAG, "onCreate:populateViewHolder: text => " + feedItem.getText() + " & title => " + feedItem.getTitle());
 
                 Log.d(TAG, "onCreate:populateViewHolder: type => " + feedItem.getType());
 
                 Log.d(TAG, "onCreate:populateViewHolder: seen => " + feedItem.getSeen());
+
+                Log.d(TAG, "onCreate:populateViewHolder: key => " + feedItem.getKey());
 //                Toast.makeText(getApplicationContext(), "Feed Type: " + feedItem.getFeedType() , Toast.LENGTH_LONG).show();
 
                 if (feedItem.getType() == FeedItem.FEED_AUCTION){
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
-                    viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+                    if (feedItem.getSeen()){
+                        viewHolder.messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
+                    } else {
+                        viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+                    }
                 } else if (feedItem.getType() == FeedItem.FEED_CHAT){
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());

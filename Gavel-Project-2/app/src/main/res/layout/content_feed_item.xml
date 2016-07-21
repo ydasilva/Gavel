@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.psyphertxt.gavel.FeedItemActivity"
+    tools:showIn="@layout/activity_feed_item">
+
+    <Button
+        android:id="@+id/btnLive_FeedItem"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/auction_text_layout"
+        android:layout_marginTop="@dimen/button_height"
+        android:text="Start Live Video"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/primary_button_selector" />
+
+</RelativeLayout>

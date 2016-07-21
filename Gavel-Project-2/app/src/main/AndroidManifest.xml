@@ -41,11 +41,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- NEW_AUCTION_ACTIVITY -->
         <activity
             android:name=".NewAuctionActivity"
             android:label="@string/title_activity_new_auction"
             android:parentActivityName=".MainFeedActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.psyphertxt.gavel.MainFeedActivity" />
+        </activity>
+
+        <!-- FEED_ITEM_ACTIVITY -->
+        <activity
+            android:name=".FeedItemActivity"
+            android:label="@string/title_activity_feed_item"
+            android:parentActivityName=".MainFeedActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.psyphertxt.gavel.MainFeedActivity" />

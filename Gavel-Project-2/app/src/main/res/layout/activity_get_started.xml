@@ -38,5 +38,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar_getStarted"
+        android:layout_below="@+id/phone_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62dp"
+        android:visibility="invisible"/>
+
 
 </RelativeLayout>
