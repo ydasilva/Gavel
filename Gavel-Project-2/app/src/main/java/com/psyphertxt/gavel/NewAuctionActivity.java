@@ -57,7 +57,7 @@ public class NewAuctionActivity extends AppCompatActivity {
                 } else {
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-                    //java.lang.NullPointerException: Can't pass null for argument 'pathString' in child()
+                    //creating the feedItem
                     DatabaseReference myMessageDataRef = database.getReference(FeedItem.DATABASE_REFERENCE_NAME);
                     DatabaseReference myFeedRef = myMessageDataRef.push();
 
@@ -77,14 +77,17 @@ public class NewAuctionActivity extends AppCompatActivity {
                     DatabaseReference myDataRef = database.getReference();
                     DatabaseReference auctionRef = myDataRef.child(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
 
+                    Toast.makeText(v.getContext(), "Feed Push Key: " + myFeedRef.getKey(), Toast.LENGTH_LONG).show();
+
                     ArrayList<String> participants = new ArrayList<>();
+                    participants.add(participants.size(),mSettings.getUserId());
 
                     Map<String,Object> newAuction = new HashMap<>();
                     value.put("auctionDescription",auctionText);
                     value.put("auctionTitle",auctionTitle);
                     value.put("auctionAuthorId",mSettings.getUserId());
                     value.put("auctionStartPrice",auctionStartingPrice);
-                    value.put("auctionEndDate",null);
+                    value.put("auctionEndDate","01-08-2016");
                     value.put("auctionParticipantsId",participants);
 
                     auctionRef.setValue(newAuction);

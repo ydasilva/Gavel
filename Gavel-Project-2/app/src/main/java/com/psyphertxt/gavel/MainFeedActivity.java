@@ -42,8 +42,9 @@ public class MainFeedActivity extends AppCompatActivity {
         public CircleImageView messengerImageView;
         public ImageView messageType;
         public int iconNum;
-        public Boolean seen;
+//        public Boolean seen;
         public String key;
+        public View line;
 
         public MessageViewHolder(View v) {
             super(v);
@@ -52,6 +53,7 @@ public class MainFeedActivity extends AppCompatActivity {
             messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
             messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
             messageType = (ImageView) itemView.findViewById(R.id.messageTypeIcon);
+            line = itemView.findViewById(R.id.top_line);
         }
 
         @Override
@@ -69,7 +71,7 @@ public class MainFeedActivity extends AppCompatActivity {
             }
 
             if (iconNum == FeedItem.FEED_AUCTION) {
-                //todo: check if it was seen and set seen to true >>[setSeen(true)]<< if it was false
+
                 if (seen) {
                     messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
                 } else {
@@ -92,14 +94,14 @@ public class MainFeedActivity extends AppCompatActivity {
             return this.iconNum;
         }
 
-        public void setSeen(Boolean seen) {
+        /*public void setSeen(Boolean seen) {
             this.seen = seen;
             //todo: set this on firebase also
         }
 
         public Boolean getSeen() {
             return this.seen;
-        }
+        }*/
 
         public void setKey(String key) {
             this.key = key;
@@ -330,11 +332,15 @@ public class MainFeedActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 Log.d(TAG, "onCreate:populateViewHolder:progressBar:invisible");
 
+                if (position == 0){
+                    viewHolder.line.setVisibility(View.INVISIBLE);
+                }
+
                 viewHolder.messageTextView.setText(trimText(feedItem.getText()));
                 viewHolder.messengerTextView.setText(feedItem.getTitle());
                 viewHolder.messageType.setColorFilter(android.R.color.black);
 
-                viewHolder.setSeen(feedItem.getSeen());
+//                viewHolder.setSeen(feedItem.getSeen());
                 viewHolder.setIconNum(feedItem.getType());
                 viewHolder.setKey(feedItem.getKey());
 
@@ -342,19 +348,34 @@ public class MainFeedActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onCreate:populateViewHolder: type => " + feedItem.getType());
 
-                Log.d(TAG, "onCreate:populateViewHolder: seen => " + feedItem.getSeen());
-
                 Log.d(TAG, "onCreate:populateViewHolder: key => " + feedItem.getKey());
 //                Toast.makeText(getApplicationContext(), "Feed Type: " + feedItem.getFeedType() , Toast.LENGTH_LONG).show();
 
                 if (feedItem.getType() == FeedItem.FEED_AUCTION){
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
-                    if (feedItem.getSeen()){
+
+                    viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+
+                    /*if (feedItem.getSeen()){
                         viewHolder.messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
                     } else {
                         viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
                     }
+
+                    as soon as you created an auction this is created for every user
+                    favorites
+                        userId
+                            pushId for a message
+                                seen : true
+                                joined : true
+                            pushId for another message
+                                seen : false
+                                joined: false
+
+                    if 'data snapshot' does not exist then that means that the user never opened the auction
+                            */
+
                 } else if (feedItem.getType() == FeedItem.FEED_CHAT){
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
@@ -406,8 +427,8 @@ public class MainFeedActivity extends AppCompatActivity {
     }
 
     public static String trimText(String text) {
-        if (text.length() >= 100) {
-            return truncateText(text, 60);
+        if (text.length() >= 80) {
+            return truncateText(text, 50);
         }
         return text;
     }

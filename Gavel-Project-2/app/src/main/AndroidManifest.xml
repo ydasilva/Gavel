@@ -47,8 +47,8 @@
             android:name=".NewAuctionActivity"
             android:label="@string/title_activity_new_auction"
             android:parentActivityName=".MainFeedActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.psyphertxt.gavel.MainFeedActivity" />
@@ -59,8 +59,17 @@
             android:name=".FeedItemActivity"
             android:label="@string/title_activity_feed_item"
             android:parentActivityName=".MainFeedActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.psyphertxt.gavel.MainFeedActivity" />
+        </activity>
+        <activity
+            android:name=".AuctionActivity"
+            android:label="@string/title_activity_auction"
+            android:parentActivityName=".MainFeedActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.psyphertxt.gavel.MainFeedActivity" />

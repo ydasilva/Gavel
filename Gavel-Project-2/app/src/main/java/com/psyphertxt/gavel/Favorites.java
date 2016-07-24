@@ -8,22 +8,22 @@ import java.util.ArrayList;
 public class Favorites {
     public static final String DATABASE_REFERENCE_NAME = "favorites";
 
-    private ArrayList<String> seen;
-    private ArrayList<String> joined;
+    private Boolean seen;
+    private Boolean joined;
 
-    public ArrayList<String> getSeen() {
+    public Boolean getSeen() {
         return seen;
     }
 
-    public void setSeen(ArrayList<String> seen) {
+    public void setSeen(Boolean seen) {
         this.seen = seen;
     }
 
-    public ArrayList<String> getJoined() {
+    public Boolean getJoined() {
         return joined;
     }
 
-    public void setJoined(ArrayList<String> joined) {
+    public void setJoined(Boolean joined) {
         this.joined = joined;
     }
 }

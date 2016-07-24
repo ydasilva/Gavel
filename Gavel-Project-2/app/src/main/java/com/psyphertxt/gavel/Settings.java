@@ -40,5 +40,4 @@ public class Settings {
         mSharedPreferences.edit().putString(Config.USER_NAME,userName).apply();
     }
 
-
 }
