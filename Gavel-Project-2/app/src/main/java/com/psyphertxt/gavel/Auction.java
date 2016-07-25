@@ -12,8 +12,8 @@ public class Auction {
     private String mAuctionTitle;
     private String mAuctionDescription;
     private String mAuctionAuthorId;
-    private int mAuctionStartPrice;
-    private Date mAuctionEndDate;
+    private String mAuctionStartPrice;
+    private String mAuctionEndDate;
     private ArrayList<String> mAuctionParticipantsId;
 
     public String getAuctionTitle() {
@@ -40,19 +40,19 @@ public class Auction {
         this.mAuctionAuthorId = mAuctionAuthorId;
     }
 
-    public int getAuctionStartPrice() {
+    public String getAuctionStartPrice() {
         return mAuctionStartPrice;
     }
 
-    public void setAuctionStartPrice(int mAuctionStartPrice) {
+    public void setAuctionStartPrice(String mAuctionStartPrice) {
         this.mAuctionStartPrice = mAuctionStartPrice;
     }
 
-    public Date getAuctionEndDate() {
+    public String getAuctionEndDate() {
         return mAuctionEndDate;
     }
 
-    public void setAuctionEndDate(Date mAuctionEndDate) {
+    public void setAuctionEndDate(String mAuctionEndDate) {
         this.mAuctionEndDate = mAuctionEndDate;
     }
 

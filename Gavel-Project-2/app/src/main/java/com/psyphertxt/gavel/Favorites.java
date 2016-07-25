@@ -8,6 +8,26 @@ import java.util.ArrayList;
 public class Favorites {
     public static final String DATABASE_REFERENCE_NAME = "favorites";
 
+    private ArrayList<String> seen;
+    private ArrayList<String> joined;
+
+    public ArrayList<String> getSeen() {
+        return seen;
+    }
+
+    public void setSeen(ArrayList<String> seen) {
+        this.seen = seen;
+    }
+
+    public ArrayList<String> getJoined() {
+        return joined;
+    }
+
+    public void setJoined(ArrayList<String> joined) {
+        this.joined = joined;
+    }
+
+    /*
     private Boolean seen;
     private Boolean joined;
 
@@ -25,5 +45,5 @@ public class Favorites {
 
     public void setJoined(Boolean joined) {
         this.joined = joined;
-    }
+    }*/
 }

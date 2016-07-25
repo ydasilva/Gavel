@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -23,8 +25,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -42,7 +47,7 @@ public class MainFeedActivity extends AppCompatActivity {
         public CircleImageView messengerImageView;
         public ImageView messageType;
         public int iconNum;
-//        public Boolean seen;
+        //        public Boolean seen;
         public String key;
         public View line;
 
@@ -60,10 +65,10 @@ public class MainFeedActivity extends AppCompatActivity {
         public void onClick(View v) {
             Toast.makeText(v.getContext(), "Feed at position " + getAdapterPosition() + ": Clicked." + "Key = " + getKey(), Toast.LENGTH_LONG).show();
 
-          //
+            //
 
-            Intent feedIntent = new Intent(v.getContext(),FeedItemActivity.class);
-            feedIntent.putExtra("key",getKey());
+            Intent feedIntent = new Intent(v.getContext(), FeedItemActivity.class);
+            feedIntent.putExtra("key", getKey());
             v.getContext().startActivity(feedIntent);
 
             /*if (!seen){
@@ -216,7 +221,7 @@ public class MainFeedActivity extends AppCompatActivity {
 
                 mView.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getApplicationContext(), "Welcome " + mSettings.getUserName() , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Welcome " + mSettings.getUserName(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -250,7 +255,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 myFeedRef.setValue(value);
                 Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();*/
 
-                startActivity(new Intent(MainFeedActivity.this,NewAuctionActivity.class));
+                startActivity(new Intent(MainFeedActivity.this, NewAuctionActivity.class));
 
                 actionMenu.close(true);
             }
@@ -274,7 +279,7 @@ public class MainFeedActivity extends AppCompatActivity {
                 value.put("authorId",mSettings.getUserId());
 
                 myFeedRef.setValue(value);*/
-                Toast.makeText(getApplicationContext(), "Open a new activity to handle this action" , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Open a new activity to handle this action", Toast.LENGTH_LONG).show();
                 actionMenu.close(true);
             }
         });
@@ -327,12 +332,12 @@ public class MainFeedActivity extends AppCompatActivity {
                 mFirebaseDatabaseReference.child(FeedItem.DATABASE_REFERENCE_NAME)) {
 
             @Override
-            protected void populateViewHolder(MessageViewHolder viewHolder,
-                                              FeedItem feedItem, int position) {
+            protected void populateViewHolder(final MessageViewHolder viewHolder,
+                                              final FeedItem feedItem, int position) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 Log.d(TAG, "onCreate:populateViewHolder:progressBar:invisible");
 
-                if (position == 0){
+                if (position == 0) {
                     viewHolder.line.setVisibility(View.INVISIBLE);
                 }
 
@@ -349,13 +354,37 @@ public class MainFeedActivity extends AppCompatActivity {
                 Log.d(TAG, "onCreate:populateViewHolder: type => " + feedItem.getType());
 
                 Log.d(TAG, "onCreate:populateViewHolder: key => " + feedItem.getKey());
-//                Toast.makeText(getApplicationContext(), "Feed Type: " + feedItem.getFeedType() , Toast.LENGTH_LONG).show();
 
-                if (feedItem.getType() == FeedItem.FEED_AUCTION){
+                if (feedItem.getType() == FeedItem.FEED_AUCTION) {
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
 
                     viewHolder.messageType.setImageResource(R.drawable.ic_gavel_red_24dp);
+
+                    mFirebaseDatabaseReference.child(Favorites.DATABASE_REFERENCE_NAME)
+                            .child(mSettings.getUserId()).child(feedItem.getKey())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        if (dataSnapshot.getValue() instanceof HashMap) {
+                                            Favorites favSetting = dataSnapshot.getValue(Favorites.class);
+                                            Log.d(TAG, "onCreate:populateViewHolder:onDataChange:pushId " + favSetting.getSeen().get(0));
+                                            if (favSetting.getSeen().contains(feedItem.getKey())) {
+                                                viewHolder.messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+
 
                     /*if (feedItem.getSeen()){
                         viewHolder.messageType.setImageResource(R.drawable.ic_gavel_black_24dp);
@@ -376,7 +405,7 @@ public class MainFeedActivity extends AppCompatActivity {
                     if 'data snapshot' does not exist then that means that the user never opened the auction
                             */
 
-                } else if (feedItem.getType() == FeedItem.FEED_CHAT){
+                } else if (feedItem.getType() == FeedItem.FEED_CHAT) {
                     //todo: make sure it was NOT seen before drawing with the red icon
                     Log.d(TAG, "onCreate:populateViewHolder:feedType " + feedItem.getType());
                     viewHolder.messageType.setImageResource(R.drawable.ic_chat_red_24dp);
@@ -420,6 +449,29 @@ public class MainFeedActivity extends AppCompatActivity {
         // End of New Child Entries
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu feedMenu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_auction, feedMenu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem feedMenuItem) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = feedMenuItem.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(feedMenuItem);
+    }
+
 
     public static String truncateText(String text, int max) {
         return text.substring(0, Math.min(text.length(), max)) + "...";

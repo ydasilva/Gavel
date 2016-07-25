@@ -70,28 +70,51 @@ public class NewAuctionActivity extends AppCompatActivity {
                     value.put("authorId",mSettings.getUserId());
 
                     myFeedRef.setValue(value);
-                    Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Added a new feed item" , Toast.LENGTH_LONG).show();
 
 
                     //creating an auction
-                    DatabaseReference myDataRef = database.getReference();
-                    DatabaseReference auctionRef = myDataRef.child(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
+                    DatabaseReference myDataRef = database.getReference(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
+                    DatabaseReference auctionRef = myDataRef.child("");
 
                     Toast.makeText(v.getContext(), "Feed Push Key: " + myFeedRef.getKey(), Toast.LENGTH_LONG).show();
 
-                    ArrayList<String> participants = new ArrayList<>();
-                    participants.add(participants.size(),mSettings.getUserId());
+//                    ArrayList<String> participants = new ArrayList<>();
+//                    participants.add(participants.size(),mSettings.getUserId());
+
+
 
                     Map<String,Object> newAuction = new HashMap<>();
-                    value.put("auctionDescription",auctionText);
-                    value.put("auctionTitle",auctionTitle);
-                    value.put("auctionAuthorId",mSettings.getUserId());
-                    value.put("auctionStartPrice",auctionStartingPrice);
-                    value.put("auctionEndDate","01-08-2016");
-                    value.put("auctionParticipantsId",participants);
+                    newAuction.put("auctionDescription",auctionText);
+                    newAuction.put("auctionTitle",auctionTitle);
+                    newAuction.put("auctionAuthorId",mSettings.getUserId());
+                    newAuction.put("auctionStartPrice",auctionStartingPrice);
+                    newAuction.put("auctionEndDate","01-08-2016");
+                    newAuction.put("auctionParticipantsId",participants);
 
                     auctionRef.setValue(newAuction);
                     Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
+
+
+                    //creating the favorite list
+                    DatabaseReference myFavoriteDataRef = database.getReference();
+                    DatabaseReference myFavRef = myFavoriteDataRef
+                            .child(Favorites.DATABASE_REFERENCE_NAME).child(mSettings.getUserId());
+
+                    ArrayList<String> seen = new ArrayList<>();
+                    ArrayList<String> joined = new ArrayList<>();
+
+                    seen.add(seen.size(),myFeedRef.getKey());
+                    joined.add(joined.size(),myFeedRef.getKey());
+                    joined.add(joined.size(),myFeedRef.getKey());
+
+
+                    Map<String,Object> favoriteItemList = new HashMap<>();
+                    favoriteItemList.put("seen",seen);
+                    favoriteItemList.put("joined",joined);
+
+                    myFavRef.updateChildren(favoriteItemList);
+                    Toast.makeText(getApplicationContext(), "Added the favorites option" , Toast.LENGTH_LONG).show();
 
                     startActivity(new Intent(NewAuctionActivity.this, MainFeedActivity.class));
                     finish();

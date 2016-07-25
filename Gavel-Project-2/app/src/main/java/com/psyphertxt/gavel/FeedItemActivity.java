@@ -10,12 +10,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.api.model.StringList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,26 +56,33 @@ public class FeedItemActivity extends AppCompatActivity {
 
         key = getIntent().getStringExtra("key");
 
-        mDatabase.child(Auction.DATABASE_REFERENCE_NAME).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child(Auction.DATABASE_REFERENCE_NAME).child(key).child("auctionParticipantsId").updateChildren()
+
+            /*    .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                auction = dataSnapshot.getValue(Auction.class);
-                if (auction != null){
-                    if (auction.getAuctionParticipantsId().contains(mSettings.getUserId())){
-                        joinMsg = "You've already joined this auction";
-                    } else {
-                        joinMsg = "Not joined";
+                if (dataSnapshot.exists()){
+                    if (dataSnapshot.getValue() instanceof HashMap){
+                        auction = dataSnapshot.getValue(Auction.class);
+                        if (auction != null){
+                            if (auction.getAuctionParticipantsId().contains(mSettings.getUserId())){
+                                joinMsg = "You've already joined this auction";
+                            } else {
+                                joinMsg = "Not joined";
+                            }
+                        }
                     }
                 }
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
-        mDatabase.child(Favorites.DATABASE_REFERENCE_NAME).child(mSettings.getUserId()).child(key)
+        mDatabase.child(Favorites.DATABASE_REFERENCE_NAME).child(mSettings.getUserId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -99,11 +108,15 @@ public class FeedItemActivity extends AppCompatActivity {
 
                         //check if seen if false - set it to true if it is false
                         if(myFavorites != null){
-                            if (myFavorites.getSeen() != null) {
-                                myFavorites.setSeen(true);
-//                                Boolean seenFeeds = myFavorites.getSeen();
-//                                seenFeeds.add(seenFeeds.size(),key);
+                            if(!myFavorites.getSeen().contains(mSettings.getUserId())){
+                                int size = myFavorites.getSeen().size();
+                                ArrayList<String> newFavs = myFavorites.getSeen();
+
+                                newFavs.add(size,key);
+
+                                myFavorites.setSeen(newFavs);
                             }
+
                         }
 
                         Map<String, Object> childUpdates = new HashMap<>();
