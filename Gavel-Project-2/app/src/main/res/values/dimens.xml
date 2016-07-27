@@ -29,4 +29,7 @@
     <dimen name="radius_small">30dp</dimen>
     <dimen name="radius_medium">72dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+
+    <dimen name="local_video_size">90dp</dimen>
+    <dimen name="local_video_margin">16dp</dimen>
 </resources>

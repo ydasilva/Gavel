@@ -56,7 +56,7 @@ public class FeedItemActivity extends AppCompatActivity {
 
         key = getIntent().getStringExtra("key");
 
-        mDatabase.child(Auction.DATABASE_REFERENCE_NAME).child(key).child("auctionParticipantsId").updateChildren()
+//        mDatabase.child(Auction.DATABASE_REFERENCE_NAME).child(key).child("auctionParticipantsId").updateChildren();
 
             /*    .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

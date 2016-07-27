@@ -21,14 +21,14 @@ android {
 
     defaultConfig {
         applicationId "com.psyphertxt.gavel"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true //was false before adding twilio
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -64,6 +64,10 @@ dependencies {
     
     //Glide Setup
     compile 'com.github.bumptech.glide:glide:3.6.1'
+
+    //twilio
+    compile 'com.koushikdutta.ion:ion:2.1.7'
+    compile 'com.twilio:conversations-android:0.11.0'
 }
 
 // Add to the bottom of the file (Firebase Setup)

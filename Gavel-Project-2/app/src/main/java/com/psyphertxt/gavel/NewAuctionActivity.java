@@ -74,8 +74,9 @@ public class NewAuctionActivity extends AppCompatActivity {
 
 
                     //creating an auction
-                    DatabaseReference myDataRef = database.getReference(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
-                    DatabaseReference auctionRef = myDataRef.child("");
+                    DatabaseReference myAuctionDataRef = database.getReference(Auction.DATABASE_REFERENCE_NAME).child(myFeedRef.getKey());
+                    DatabaseReference participantsRef = myAuctionDataRef.child("auctionParyicipantsId").push();
+//                    participantsRef.updateChildren();
 
                     Toast.makeText(v.getContext(), "Feed Push Key: " + myFeedRef.getKey(), Toast.LENGTH_LONG).show();
 
@@ -90,9 +91,9 @@ public class NewAuctionActivity extends AppCompatActivity {
                     newAuction.put("auctionAuthorId",mSettings.getUserId());
                     newAuction.put("auctionStartPrice",auctionStartingPrice);
                     newAuction.put("auctionEndDate","01-08-2016");
-                    newAuction.put("auctionParticipantsId",participants);
+//                    newAuction.put("auctionParticipantsId",participants);
 
-                    auctionRef.setValue(newAuction);
+                    myAuctionDataRef.setValue(newAuction);
                     Toast.makeText(getApplicationContext(), "Added a new Auction" , Toast.LENGTH_LONG).show();
 
 
